@@ -11,8 +11,23 @@ def slice_window(X, off, TA):
     # TA: Total Analysis window length
     return X[:, :, off:off+TA]
 
+class EEGTransform:
+    def __init__(self, noise_std=0.01, channel_dropout_prob=0.1):
+        self.noise_std = noise_std
+        self.channel_dropout_prob = channel_dropout_prob
+
+    def __call__(self, x):
+        # x: [channels, time]
+        if self.noise_std > 0:
+            x = x + torch.randn_like(x) * self.noise_std
+        
+        if self.channel_dropout_prob > 0:
+            mask = torch.rand(x.shape[0], 1) > self.channel_dropout_prob
+            x = x * mask.float()
+        return x
+
 class AllCropsDS(Dataset):
-    def __init__(self, X_nct, y, crop_starts, length_map, short_remap, long_remap):
+    def __init__(self, X_nct, y, crop_starts, length_map, short_remap, long_remap, transform=None):
         self.X = X_nct
         self.y = y
         self.crop_starts = crop_starts
@@ -20,6 +35,7 @@ class AllCropsDS(Dataset):
         self.length_map = length_map
         self.short_remap = short_remap
         self.long_remap = long_remap
+        self.transform = transform
 
     def __len__(self):
         return self.X.shape[0] * len(self.crop_starts)
@@ -30,6 +46,10 @@ class AllCropsDS(Dataset):
         s = self.crop_starts[crop_idx]
         x = self.X[trial_idx, :, s:s+self.crop_len]
         
+        x_tensor = torch.from_numpy(x).float()
+        if self.transform:
+            x_tensor = self.transform(x_tensor)
+            
         y_full = int(self.y[trial_idx])
         y_len = self.length_map[y_full]
         
@@ -39,7 +59,7 @@ class AllCropsDS(Dataset):
         else: # long
             y_route = self.long_remap[y_full]
             
-        return torch.from_numpy(x).float(), torch.tensor(y_full).long(), torch.tensor(y_len).long(), torch.tensor(y_route).long()
+        return x_tensor, torch.tensor(y_full).long(), torch.tensor(y_len).long(), torch.tensor(y_route).long()
 
 def pick_epo_key(keys):
     for k in ["epo_train","epo_val","epo_valid","epo_validation","epo_test","epo"]:

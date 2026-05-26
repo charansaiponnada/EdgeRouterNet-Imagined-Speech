@@ -13,7 +13,7 @@ from tqdm import tqdm
 import sys
 
 from .model import EdgeRouterNet, ArcMarginProduct
-from .dataset import AllCropsDS, slice_window
+from .dataset import AllCropsDS, slice_window, EEGTransform
 from .utils import (
     set_seed, safe_cuda_empty_cache, count_params, write_csv,
     metrics_from_preds, build_warmup_cosine_scheduler, route_probs_to_5,
@@ -32,7 +32,7 @@ from .config import (
 def train_one_member(cfg, X_train_sub, y_train_sub, X_calib, y_calib,
                      TA, fold_tag, ab,
                      member_keep_frac,
-                     run_dir, device):
+                     run_dir, device, use_aug=True):
     
     set_seed(cfg["seed"])
     name = cfg["name"]
@@ -46,10 +46,11 @@ def train_one_member(cfg, X_train_sub, y_train_sub, X_calib, y_calib,
     ).to(device)
     arc = ArcMarginProduct(in_features=model.emb_dim, out_features=5, s=ARC_S, m=ARC_M).to(device)
 
-    print(f"\n[{fold_tag}] Member {name} | TA={TA} crops/trial={len(crop_starts)} keep_frac={member_keep_frac:.2f}")
+    print(f"\n[{fold_tag}] Member {name} | TA={TA} crops/trial={len(crop_starts)} keep_frac={member_keep_frac:.2f} aug={use_aug}")
     print(f"  params(model)={count_params(model)} params(arc)={count_params(arc)}")
 
-    ds = AllCropsDS(X_train_sub, y_train_sub, crop_starts, LENGTH_MAP, SHORT_REMAP, LONG_REMAP)
+    transform = EEGTransform() if use_aug else None
+    ds = AllCropsDS(X_train_sub, y_train_sub, crop_starts, LENGTH_MAP, SHORT_REMAP, LONG_REMAP, transform=transform)
     loader = DataLoader(
         ds, batch_size=DEFAULT_BATCH_SIZE, shuffle=True,
         num_workers=0, pin_memory=(device=="cuda")

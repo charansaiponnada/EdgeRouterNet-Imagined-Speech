@@ -22,6 +22,9 @@ test:
 lint:
 	ruff check .
 
+visualize:
+	python src/visualize.py --ckpt $(CKPT) --data_file $(DATA_FILE)
+
 clean:
 	rm -rf $(OUT_DIR)
 	rm -rf $(DATA_DIR)

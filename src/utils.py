@@ -124,3 +124,37 @@ def trial_probs_one_model_direct(model, arc, x_cta, crop_starts,
     p_arc = torch.softmax(logits_arc / t_arc, dim=1)
     p = (1.0 - beta_arc) * p_route + beta_arc * p_arc
     return p.mean(dim=0)
+
+def generate_saliency_map(model, arc, x_ct, target_class, beta_arc=0.55):
+    """
+    Generates a saliency map (gradients of input wrt target class score)
+    to identify which EEG channels and time points are most influential.
+    """
+    model.eval()
+    arc.eval()
+    
+    # Ensure input requires grad
+    if isinstance(x_ct, np.ndarray):
+        x_ct = torch.from_numpy(x_ct).float()
+    
+    x_ct = x_ct.unsqueeze(0).to(next(model.parameters()).device)
+    x_ct.requires_grad = True
+    
+    # Forward pass
+    len_l, sh_l, lo_l, emb = model(x_ct)
+    p_route = route_probs_to_5(len_l, sh_l, lo_l)
+    
+    W = F.normalize(arc.weight, dim=1)
+    logits_arc = F.linear(F.normalize(emb, dim=1), W) * float(arc.s)
+    p_arc = torch.softmax(logits_arc, dim=1)
+    
+    p = (1.0 - beta_arc) * p_route + beta_arc * p_arc
+    score = p[0, target_class]
+    
+    # Backward pass
+    model.zero_grad()
+    arc.zero_grad()
+    score.backward()
+    
+    saliency = x_ct.grad.data.abs().squeeze(0).cpu().numpy()
+    return saliency
