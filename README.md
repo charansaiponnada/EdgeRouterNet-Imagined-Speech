@@ -1,4 +1,4 @@
-# BCI Imagined Speech Decoding
+# EdgeRouterNet: SOTA Imagined Speech Decoding
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/release/python-3100/)
@@ -25,7 +25,7 @@ Imagined speech decoding for Brain-Computer Interfaces (BCIs) interprets neural 
 ## Repository Structure
 
 ```
-BITS/
+EdgeRouterNet-Imagined-Speech/
 ├── src/                # Modular source code
 ├── tests/              # Basic test suite
 ├── .github/            # Issue and PR templates
@@ -45,8 +45,8 @@ BITS/
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/bits.git
-cd BITS
+git clone https://github.com/charansaiponnad/EdgeRouterNet-Imagined-Speech.git
+cd EdgeRouterNet-Imagined-Speech
 
 # Install dependencies
 make setup

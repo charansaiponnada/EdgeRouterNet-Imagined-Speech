@@ -10,6 +10,6 @@ Currently, only the latest version of the project is supported.
 
 ## Reporting a Vulnerability
 
-If you discover a potential security vulnerability in this project, please report it by sending an email to [INSERT EMAIL ADDRESS]. Do not open a public issue for security vulnerabilities.
+If you discover a potential security vulnerability in this project, please report it by sending an email to charansaiponnad@gmail.com. Do not open a public issue for security vulnerabilities.
 
 We will acknowledge receipt of your vulnerability report within 48 hours and will provide an estimated timeframe for a fix.
