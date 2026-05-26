@@ -5,6 +5,10 @@
 
 Modularized training pipeline for imagined speech decoding from EEG signals, targeting the **IEEE DELCON 2026** conference. This repository implements a SOTA architecture, **EdgeRouterNet**, optimized for the KaraOne dataset.
 
+## Credits & Acknowledgements
+
+This project is based on the groundbreaking research conducted by **Jasmit Singh**, PhD Scholar at **IIT Mandi**. The entire credit for the architecture, methodology, and scientific contributions goes to him.
+
 ## Overview
 
 ![Architecture](assets/arch.png)
@@ -45,7 +49,7 @@ EdgeRouterNet-Imagined-Speech/
 
 ```bash
 # Clone the repository
-git clone https://github.com/charansaiponnad/EdgeRouterNet-Imagined-Speech.git
+git clone https://github.com/charansaiponnada/EdgeRouterNet-Imagined-Speech.git
 cd EdgeRouterNet-Imagined-Speech
 
 # Install dependencies
@@ -88,12 +92,12 @@ python run.py --data_dir ./data/karaone --mode both --tag EXPERIMENT_01
 
 ## Citation
 
-If you use this codebase in your research, please cite our target paper for DELCON 2026:
+If you use this codebase in your research, please cite the primary work:
 
 ```bibtex
 @inproceedings{delcon2026imagined,
   title={SOTA Imagined Speech Decoding via EdgeRouterNet and Metric Learning},
-  author={Varun et al.},
+  author={Singh, Jasmit et al.},
   booktitle={5th IEEE Delhi Section Flagship Conference (DELCON 2026)},
   year={2026}
 }

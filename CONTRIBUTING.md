@@ -26,7 +26,7 @@ We welcome ideas for new features or improvements. Please use the **Feature Requ
 
 1. Clone your fork:
    ```bash
-   git clone https://github.com/charansaiponnad/EdgeRouterNet-Imagined-Speech.git
+   git clone https://github.com/charansaiponnada/EdgeRouterNet-Imagined-Speech.git
    cd EdgeRouterNet-Imagined-Speech
    ```
 2. Set up the environment:
